@@ -38,11 +38,18 @@ public class CharacterControllerScript : MonoBehaviour
 
     //keys
     public KeyCode pick = KeyCode.Mouse0;
+    public GameObject door = null;
+
 
     //animation
     public Animator axeAnim;
     public axeBreak axeBreak1;
+    public GameObject axe;
 
+    public GameObject axeCam;
+
+
+    public bool stop = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -90,21 +97,25 @@ public class CharacterControllerScript : MonoBehaviour
             
         }
 
-        if (objectHolding != null && objectHolding.tag == "axe" && Input.GetKeyDown(KeyCode.Mouse0) && axeAnim.GetBool("Swinging") == false)
+        
+        if (objectHolding != null  && Input.GetKeyDown(KeyCode.Mouse0) && axeAnim.GetBool("Swinging") == false && objectHolding.tag == "axe")
         {
             axeAnim.SetBool("Swinging", true);
         }
         else
         {
-            axeAnim.SetBool("Swinging", false);
+            if(axeAnim.GetBool("Swinging") == true)
+            {
+                axeAnim.SetBool("Swinging", false);
+            }
         }
-        
 
         //checks if player picks up object
         if(pickUp == true && Input.GetKey(pick) && holding == false)
         {
             holding = true;
             objectHolding = lastObject;
+            objectHolding.GetComponent<BoxCollider>().enabled = false;
         }
         
 
@@ -112,38 +123,48 @@ public class CharacterControllerScript : MonoBehaviour
         if(Input.GetKeyDown(pick) && holding == true)
         {
             holding = false;
+            objectHolding.GetComponent<BoxCollider>().enabled = true;
             objectHolding = null;
         }
         
         
         //check if opening door
-        if (insert == true && Input.GetKeyDown(KeyCode.Mouse0) && holding == true && objectHolding.tag == "key")
+        if (insert == true && Input.GetKeyDown(KeyCode.Mouse0) && holding == true && objectHolding != null && objectHolding.tag == "key")
         {
+            
             Debug.Log("Open Door");
         }
 
         //moves the object in hand that the player wants to hold
         if(holding == true)
         {
+            
             lastObject.transform.position = itemPos.transform.position;
             lastObject.transform.rotation = cam.transform.rotation;
         }
+        
         //Raycast
         RayOrigin = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         if (Physics.Raycast(RayOrigin, out HitInfo,2f, mask))
         {
-            
-            if((HitInfo.collider.gameObject.tag == "pickUp" || HitInfo.collider.gameObject.tag == "key" ||HitInfo.collider.gameObject.tag == "axe") && !holding)
+            stop = true;
+            //Debug.Log(HitInfo.collider.gameObject.name);
+            if((HitInfo.collider.gameObject.tag == "pickUp" || HitInfo.collider.gameObject.tag == "key" ||HitInfo.collider.gameObject.tag == "axe") && holding == false)
             {
                 
                 pickUp = true;
                 crosshair.color = Color.green;
                 lastObject = HitInfo.collider.gameObject;
             }
-            else if(HitInfo.collider.gameObject.tag == "door" && objectHolding.tag == "key")
+            else if(HitInfo.collider.gameObject.tag == "door" && objectHolding != null && objectHolding.tag == "key")
             {
-                crosshair.color = Color.green;
-                insert = true;
+                
+                door = HitInfo.collider.gameObject;
+                if(door.GetComponent<door>().GetKey() == objectHolding)
+                {
+                    crosshair.color = Color.green;
+                    insert = true;
+                }
             }
             else
             {
@@ -151,12 +172,32 @@ public class CharacterControllerScript : MonoBehaviour
                 insert = false;
                 crosshair.color = Color.white;
             }
+            if(objectHolding != null && objectHolding.tag == "axe" && HitInfo.distance <= 1)
+            {
+                axeAnim.SetBool("tooClose", true);
+            }
+            else
+            {
+                if(axeAnim.GetBool("tooClose") == true)
+                {
+                    axeAnim.SetBool("tooClose", false);
+                }
+            }
+            
         }
         else
         {
-            pickUp = false;
-            insert = false;
-            crosshair.color = Color.white;
+            if(stop == true)
+            {
+                
+                pickUp = false;
+                insert = false;
+                crosshair.color = Color.white;
+                axeAnim.SetBool("tooClose", false);
+                door = null;
+                stop = false;
+            }
+            
         }
         
     }
