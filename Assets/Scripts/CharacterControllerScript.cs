@@ -40,15 +40,9 @@ public class CharacterControllerScript : MonoBehaviour
     public KeyCode pick = KeyCode.Mouse0;
     public GameObject door = null;
 
-
     //animation
     public Animator axeAnim;
-    public axeBreak axeBreak1;
-    public GameObject axe;
-
-    public GameObject axeCam;
-
-
+    
     public bool stop = true;
     // Start is called before the first frame update
     void Start()
