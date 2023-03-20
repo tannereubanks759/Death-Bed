@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1097497281735830224}
   - component: {fileID: -685814199948887080}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SmallBox_FracturedParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,7 +69,7 @@ GameObject:
   - component: {fileID: 5977232912152670174}
   - component: {fileID: 5958009873066789136}
   - component: {fileID: 3425464929018460246}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SmallBox_Fractured_cell.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +183,7 @@ GameObject:
   - component: {fileID: 2848111480941896896}
   - component: {fileID: 5051704454903914039}
   - component: {fileID: 4930783993362065225}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SmallBox_Fractured_cell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -297,7 +297,7 @@ GameObject:
   - component: {fileID: 5972627712886575411}
   - component: {fileID: 5187892138332008018}
   - component: {fileID: 5153406350032729483}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SmallBox_Fractured_cell.007
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -411,7 +411,7 @@ GameObject:
   - component: {fileID: 1414549211101329113}
   - component: {fileID: 557335680892311494}
   - component: {fileID: 6338606811591064974}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SmallBox_Fractured_cell.009
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -525,7 +525,7 @@ GameObject:
   - component: {fileID: 1817435011970178754}
   - component: {fileID: 1272690674886903722}
   - component: {fileID: 4730842750880957275}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SmallBox_Fractured_cell.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -639,7 +639,7 @@ GameObject:
   - component: {fileID: 5931645334623973987}
   - component: {fileID: 5454019743002282025}
   - component: {fileID: 561889095337659388}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SmallBox_Fractured_cell.005
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -753,7 +753,7 @@ GameObject:
   - component: {fileID: 6673646024504323657}
   - component: {fileID: 9176252578339545291}
   - component: {fileID: 3382316200915746953}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SmallBox_Fractured_cell.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -867,7 +867,7 @@ GameObject:
   - component: {fileID: 9053297565090543911}
   - component: {fileID: 195931808554596216}
   - component: {fileID: 854906389684296908}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SmallBox_Fractured_cell.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -981,7 +981,7 @@ GameObject:
   - component: {fileID: 315682755656373652}
   - component: {fileID: 3082888549700552795}
   - component: {fileID: 6721177298413182217}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SmallBox_Fractured_cell.008
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1095,7 +1095,7 @@ GameObject:
   - component: {fileID: 4449570512597817731}
   - component: {fileID: 2022431382487535400}
   - component: {fileID: 615868439725436272}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SmallBox_Fractured_cell.006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
