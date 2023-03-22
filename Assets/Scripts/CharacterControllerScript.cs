@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Animations;
+using UnityEngine.SceneManagement;
 public class CharacterControllerScript : MonoBehaviour
 {
     //movement
@@ -53,37 +54,65 @@ public class CharacterControllerScript : MonoBehaviour
     public bool glassCanBreak = false;
 
     public GameObject key;
+
+    public GameObject note;
+
+    public bool lookingAtPad = false;
+    public keypad keyPad;
+
+    public bool isPaused = false;
+    public bool isDead = false;
+    public GameObject pauseMenu;
+    public GameObject deathMenu;
     // Start is called before the first frame update
     void Start()
     {
         pickUp = false;
         holding = false;
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        cursorDisable();
+
+        note.SetActive(false);
+
+        pauseMenu.SetActive(false);
+        deathMenu.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        //movement
-        horizontal = Input.GetAxisRaw("Horizontal");
-        vertical = Input.GetAxisRaw("Vertical");
-        moveDirection = transform.forward * vertical + transform.right * horizontal;
-        controller.SimpleMove(moveDirection.normalized * moveSpeed);
+        if(isPaused != true && isDead != true)
+        {
+            //movement
+            horizontal = Input.GetAxisRaw("Horizontal");
+            vertical = Input.GetAxisRaw("Vertical");
+            moveDirection = transform.forward * vertical + transform.right * horizontal;
+            controller.SimpleMove(moveDirection.normalized * moveSpeed);
 
-        //looking
-        mouseX = Input.GetAxisRaw("Mouse X");
-        mouseY = Input.GetAxisRaw("Mouse Y");
-        yRotation += mouseX * sensX * multiplier;
-        xRotation -= mouseY * sensY * multiplier;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+            //looking
+            mouseX = Input.GetAxisRaw("Mouse X");
+            mouseY = Input.GetAxisRaw("Mouse Y");
+            yRotation += mouseX * sensX * multiplier;
+            xRotation -= mouseY * sensY * multiplier;
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        cam.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
-        transform.rotation = Quaternion.Euler(0, yRotation, 0);
+            cam.transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
+            transform.rotation = Quaternion.Euler(0, yRotation, 0);
+        }
+        
 
 
-
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isPaused)
+            {
+                resume();
+            }
+            else
+            {
+                Pause();
+            }
+        }
         //crouching
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
@@ -190,7 +219,28 @@ public class CharacterControllerScript : MonoBehaviour
         {
             keyAnim.SetBool("holdingKey", false);
         }
-        
+        if(lastObject != null && crosshair.color == Color.green && lastObject.tag == "note" && Input.GetKeyDown(pick))
+        {
+            Destroy(lastObject);
+            note.SetActive(true);
+        }
+        if (lookingAtPad == true && Input.GetKeyDown(KeyCode.Mouse0) && holding != true) 
+        {
+            if (lastObject.name == "enter")
+            {
+                keyPad.enter();
+            }
+            else if (lastObject.name == "clear")
+            {
+                keyPad.clearInput();
+            }
+            else 
+            {
+                keyPad.inputKey(lastObject.name);
+            }
+            
+            
+        }
         //Raycast
         RayOrigin = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         if (Physics.Raycast(RayOrigin, out HitInfo,2f, mask))
@@ -218,6 +268,18 @@ public class CharacterControllerScript : MonoBehaviour
             {
                 crosshair.color = Color.green;
                 glassCanBreak = true;
+                lastObject = HitInfo.collider.gameObject;
+            }
+            else if (HitInfo.collider.gameObject.tag == "note" && holding == false)
+            {
+                crosshair.color = Color.green;
+                
+                lastObject = HitInfo.collider.gameObject;
+            }
+            else if (HitInfo.collider.gameObject.tag == "pad" && holding == false)
+            {
+                crosshair.color = Color.green;
+                lookingAtPad = true;
                 lastObject = HitInfo.collider.gameObject;
             }
             else
@@ -255,7 +317,40 @@ public class CharacterControllerScript : MonoBehaviour
             }
             
         }
+
         
     }
-    
+    public void cursorDisable()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+    public void cursorEnable()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+    public void Pause()
+    {
+        pauseMenu.SetActive(true);
+        isPaused = true;
+        cursorEnable();
+        Time.timeScale = 0f;
+    }
+    public void resume()
+    {
+        pauseMenu.SetActive(false);
+        isPaused = false;
+        cursorDisable();
+        Time.timeScale = 1f;
+    }
+    public void loadScene(string name) {
+        SceneManager.LoadScene(name);
+    }
+    public void Dead()
+    {
+        isDead = true;
+        deathMenu.SetActive(true);
+        cursorEnable();
+    }
 }

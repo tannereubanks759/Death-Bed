@@ -11,6 +11,8 @@ TagManager:
   - box
   - axe
   - glass
+  - note
+  - pad
   layers:
   - Default
   - TransparentFX
