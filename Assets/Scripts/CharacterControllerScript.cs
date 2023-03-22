@@ -44,12 +44,15 @@ public class CharacterControllerScript : MonoBehaviour
     //animation
     public Animator axeAnim;
     public Animator keyAnim;
+    public Animator worldAnim;
 
     public bool stop = true;
 
     //axe
     public GameObject glassBroken;
     public bool glassCanBreak = false;
+
+    public GameObject key;
     // Start is called before the first frame update
     void Start()
     {
@@ -116,6 +119,10 @@ public class CharacterControllerScript : MonoBehaviour
             holding = true;
             objectHolding = lastObject;
             objectHolding.GetComponent<BoxCollider>().enabled = false;
+            if(objectHolding.name == "Teal")
+            {
+                worldAnim.SetBool("rugDown", true);
+            }
         }
         
 
@@ -138,22 +145,35 @@ public class CharacterControllerScript : MonoBehaviour
         //check if opening door
         if (insert == true && Input.GetKeyDown(KeyCode.Mouse0) && holding == true && objectHolding != null && objectHolding.tag == "key")
         {
-            
+            key = objectHolding;
+            holding = false;
+            objectHolding.GetComponent<BoxCollider>().enabled = true;
+            objectHolding = null;
+            if(key.name == "Teal")
+            {
+                worldAnim.SetBool("door1Open", true);
+            }
+            if (key.name == "Red")
+            {
+                worldAnim.SetBool("door2Open", true);
+            }
             Debug.Log("Open Door");
         }
 
         //moves the object in hand that the player wants to hold
         if(holding == true)
         {
-            
-            lastObject.transform.position = itemPos.transform.position;
-            lastObject.transform.rotation = itemPos.transform.rotation;
+            objectHolding.transform.position = itemPos.transform.position;
+            objectHolding.transform.rotation = itemPos.transform.rotation;
+
+
             if (objectHolding.tag == "key")
             {
-                if(objectHolding.name == "Red")
+                if (objectHolding.name == "Red")
                 {
-                    objectHolding.GetComponent<ParentConstraint>().enabled = false;
+                    objectHolding.GetComponent<Rigidbody>().useGravity = true;
                 }
+
                 keyAnim.SetBool("holdingKey", true);
 
             }
@@ -161,8 +181,10 @@ public class CharacterControllerScript : MonoBehaviour
             {
                 keyAnim.SetBool("holdingKey", false);
             }
-            
-            
+        }
+        else
+        {
+            keyAnim.SetBool("holdingKey", false);
         }
         
         //Raycast
