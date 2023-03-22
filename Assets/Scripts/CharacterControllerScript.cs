@@ -157,6 +157,10 @@ public class CharacterControllerScript : MonoBehaviour
             {
                 worldAnim.SetBool("door2Open", true);
             }
+            if (key.name == "Gold")
+            {
+                worldAnim.SetBool("safeOpen", true);
+            }
             Debug.Log("Open Door");
         }
 
