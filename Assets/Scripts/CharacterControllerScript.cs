@@ -37,6 +37,8 @@ public class CharacterControllerScript : MonoBehaviour
     public GameObject lastObject;
     public GameObject objectHolding;
     public LayerMask mask;
+    public bool wrongKey = false;
+
 
     //keys
     public KeyCode pick = KeyCode.Mouse0;
@@ -46,6 +48,9 @@ public class CharacterControllerScript : MonoBehaviour
     public Animator axeAnim;
     public Animator keyAnim;
     public Animator worldAnim;
+    public Animator endAnim;
+    public GameObject endCam;
+    
 
     public bool stop = true;
 
@@ -64,6 +69,16 @@ public class CharacterControllerScript : MonoBehaviour
     public bool isDead = false;
     public GameObject pauseMenu;
     public GameObject deathMenu;
+
+    public bool win;
+
+    public GameObject spawnPos;
+    public GameObject Tutorial;
+
+    public GameManager gm;
+    public AudioSource select;
+
+    public AudioSource music;
     // Start is called before the first frame update
     void Start()
     {
@@ -76,11 +91,25 @@ public class CharacterControllerScript : MonoBehaviour
 
         pauseMenu.SetActive(false);
         deathMenu.SetActive(false);
+
+        wrongKey = false;
     }
+
 
     // Update is called once per frame
     void Update()
     {
+        if(win == true)
+        {
+            cursorEnable();
+            
+            crosshair.enabled = false;
+            cam.GetComponent<Camera>().enabled = false;
+            endCam.GetComponent<Camera>().enabled = true;
+            worldAnim.SetBool("winning", true);
+            endAnim.SetBool("winning", true);
+        }
+
         if(isPaused != true && isDead != true)
         {
             //movement
@@ -152,6 +181,10 @@ public class CharacterControllerScript : MonoBehaviour
             {
                 worldAnim.SetBool("rugDown", true);
             }
+            if(objectHolding.tag == "key")
+            {
+                gm.keyPlay();
+            }
         }
         
 
@@ -166,6 +199,7 @@ public class CharacterControllerScript : MonoBehaviour
         if (glassCanBreak == true && Input.GetKeyDown(pick) && holding == false)
         {
             Vector3 spawnPos = lastObject.transform.position;
+            gm.glassPlay();
             Destroy(lastObject);
             Instantiate(glassBroken, spawnPos, Quaternion.identity);
         }
@@ -174,23 +208,45 @@ public class CharacterControllerScript : MonoBehaviour
         //check if opening door
         if (insert == true && Input.GetKeyDown(KeyCode.Mouse0) && holding == true && objectHolding != null && objectHolding.tag == "key")
         {
+
             key = objectHolding;
             holding = false;
             objectHolding.GetComponent<BoxCollider>().enabled = true;
             objectHolding = null;
-            if(key.name == "Teal")
+            if (key.name != "Key1")
             {
-                worldAnim.SetBool("door1Open", true);
+                if (key.name == "Teal")
+                {
+                    worldAnim.SetBool("door1Open", true);
+                }
+                if (key.name == "Red")
+                {
+                    worldAnim.SetBool("door2Open", true);
+                }
+                if (key.name == "Gold")
+                {
+                    worldAnim.SetBool("safeOpen", true);
+                }
             }
-            if (key.name == "Red")
+            else
             {
-                worldAnim.SetBool("door2Open", true);
+                music.Play();
+                this.gameObject.GetComponent<CharacterController>().enabled = false;
+                this.gameObject.transform.position = spawnPos.transform.position;
+                this.gameObject.transform.rotation = spawnPos.transform.rotation;
+                this.gameObject.GetComponent<CharacterController>().enabled = true;
+                gm.playing = true;
+                EndTutorial();
             }
-            if (key.name == "Gold")
-            {
-                worldAnim.SetBool("safeOpen", true);
-            }
+            
+            
             Debug.Log("Open Door");
+        }
+        if(wrongKey == true && Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            Debug.Log("wrongKey");
+            
+            gm.wrongKeyPlay();
         }
 
         //moves the object in hand that the player wants to hold
@@ -222,10 +278,12 @@ public class CharacterControllerScript : MonoBehaviour
         if(lastObject != null && crosshair.color == Color.green && lastObject.tag == "note" && Input.GetKeyDown(pick))
         {
             Destroy(lastObject);
+            gm.paperPlay();
             note.SetActive(true);
         }
         if (lookingAtPad == true && Input.GetKeyDown(KeyCode.Mouse0) && holding != true) 
         {
+            gm.keyPressPlay();
             if (lastObject.name == "enter")
             {
                 keyPad.enter();
@@ -263,6 +321,11 @@ public class CharacterControllerScript : MonoBehaviour
                     crosshair.color = Color.green;
                     insert = true;
                 }
+                
+            }
+            else if(HitInfo.collider.gameObject.tag == "door" && objectHolding == null)
+            {
+                wrongKey = true;
             }
             else if (HitInfo.collider.gameObject.tag == "glass" && holding == false) 
             {
@@ -288,6 +351,7 @@ public class CharacterControllerScript : MonoBehaviour
                 insert = false;
                 glassCanBreak = false;
                 crosshair.color = Color.white;
+                wrongKey = false;
             }
             if(objectHolding != null && objectHolding.tag == "axe" && HitInfo.distance <= 1)
             {
@@ -308,6 +372,7 @@ public class CharacterControllerScript : MonoBehaviour
             {
                 
                 pickUp = false;
+                wrongKey = false;
                 insert = false;
                 glassCanBreak = false;
                 crosshair.color = Color.white;
@@ -332,6 +397,7 @@ public class CharacterControllerScript : MonoBehaviour
     }
     public void Pause()
     {
+        select.Play();
         pauseMenu.SetActive(true);
         isPaused = true;
         cursorEnable();
@@ -339,12 +405,14 @@ public class CharacterControllerScript : MonoBehaviour
     }
     public void resume()
     {
+        select.Play();
         pauseMenu.SetActive(false);
         isPaused = false;
         cursorDisable();
         Time.timeScale = 1f;
     }
     public void loadScene(string name) {
+        select.Play();
         SceneManager.LoadScene(name);
     }
     public void Dead()
@@ -352,5 +420,15 @@ public class CharacterControllerScript : MonoBehaviour
         isDead = true;
         deathMenu.SetActive(true);
         cursorEnable();
+    }
+    public void EndTutorial()
+    {
+        
+        StartCoroutine(destroyTutorial());
+    }
+    IEnumerator destroyTutorial()
+    {
+        yield return new WaitForSeconds(2);
+        Destroy(Tutorial);
     }
 }
