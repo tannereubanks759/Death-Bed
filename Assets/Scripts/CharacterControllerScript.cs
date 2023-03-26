@@ -263,22 +263,31 @@ public class CharacterControllerScript : MonoBehaviour
 
             if (objectHolding.tag == "key")
             {
-                if (objectHolding.name == "Red")
+                if (objectHolding.name == "Red" && objectHolding.GetComponent<Rigidbody>().useGravity == false)
                 {
                     objectHolding.GetComponent<Rigidbody>().useGravity = true;
                 }
-
-                keyAnim.SetBool("holdingKey", true);
+                if (keyAnim.GetBool("holdingKey") == false)
+                {
+                    keyAnim.SetBool("holdingKey", true);
+                }
+                
 
             }
             else
             {
-                keyAnim.SetBool("holdingKey", false);
+                if (keyAnim.GetBool("holdingKey") ==true)
+                {
+                    keyAnim.SetBool("holdingKey", false);
+                }
             }
         }
         else
         {
-            keyAnim.SetBool("holdingKey", false);
+            if (keyAnim.GetBool("holdingKey") == true)
+            {
+                keyAnim.SetBool("holdingKey", false);
+            }
         }
         if(lastObject != null && crosshair.color == Color.green && lastObject.tag == "note" && Input.GetKeyDown(pick))
         {
@@ -312,23 +321,35 @@ public class CharacterControllerScript : MonoBehaviour
             //Debug.Log(HitInfo.collider.gameObject.name);
             if ((HitInfo.collider.gameObject.tag == "pickUp" || HitInfo.collider.gameObject.tag == "key" || (HitInfo.collider.gameObject.tag == "axe" && glassIsBroken == true)) && holding == false)
             {
-
-                pickUp = true;
-                crosshair.color = Color.green;
-                lastObject = HitInfo.collider.gameObject;
+                if(pickUp == false)
+                {
+                    pickUp = true;
+                }
+                if(crosshair.color != Color.green)
+                {
+                    crosshair.color = Color.green;
+                }
+                
+                if(lastObject != HitInfo.collider.gameObject)
+                {
+                    lastObject = HitInfo.collider.gameObject;
+                }
+                
             }
             else if (HitInfo.collider.gameObject.tag == "door" && objectHolding != null && objectHolding.tag == "key")
             {
-
-                door = HitInfo.collider.gameObject;
-                if (door.GetComponent<door>().GetKey() == objectHolding)
+                if(door != HitInfo.collider.gameObject)
+                {
+                    door = HitInfo.collider.gameObject;
+                }
+                if (door.GetComponent<door>().GetKey() == objectHolding && insert == false)
                 {
                     crosshair.color = Color.green;
                     insert = true;
                 }
                 
             }
-            else if(HitInfo.collider.gameObject.tag == "door" && objectHolding == null)
+            else if(HitInfo.collider.gameObject.tag == "door" && objectHolding == null && wrongKey == false)
             {
                 wrongKey = true;
             }
@@ -352,16 +373,38 @@ public class CharacterControllerScript : MonoBehaviour
             }
             else
             {
-                pickUp = false;
-                insert = false;
-                glassCanBreak = false;
-                lookingAtPad = false;
-                crosshair.color = Color.white;
-                wrongKey = false;
+                if(pickUp == true)
+                {
+                    pickUp = false;
+                }
+                if(insert == true)
+                {
+                    insert = false;
+                }
+                if(glassCanBreak == true)
+                {
+                    glassCanBreak = false;
+                }
+                if(lookingAtPad == true)
+                {
+                    lookingAtPad = false;
+                }
+                if(crosshair.color == Color.green)
+                {
+                    crosshair.color = Color.white;
+                }
+                if(wrongKey == true)
+                {
+                    wrongKey = false;
+                }
+                
             }
             if(objectHolding != null && objectHolding.tag == "axe" && HitInfo.distance <= 1)
             {
-                axeAnim.SetBool("tooClose", true);
+                if(axeAnim.GetBool("tooClose") == false)
+                {
+                    axeAnim.SetBool("tooClose", true);
+                }
             }
             else
             {
@@ -376,15 +419,34 @@ public class CharacterControllerScript : MonoBehaviour
         {
             if(stop == true)
             {
-                
-                pickUp = false;
-                wrongKey = false;
-                insert = false;
-                glassCanBreak = false;
-                lookingAtPad = false;
-                crosshair.color = Color.white;
-                axeAnim.SetBool("tooClose", false);
-                door = null;
+                if (pickUp == true)
+                {
+                    pickUp = false;
+                }
+                if (insert == true)
+                {
+                    insert = false;
+                }
+                if (glassCanBreak == true)
+                {
+                    glassCanBreak = false;
+                }
+                if (lookingAtPad == true)
+                {
+                    lookingAtPad = false;
+                }
+                if (crosshair.color == Color.green)
+                {
+                    crosshair.color = Color.white;
+                }
+                if (wrongKey == true)
+                {
+                    wrongKey = false;
+                }
+                if (axeAnim.GetBool("tooClose") == true)
+                {
+                    axeAnim.SetBool("tooClose", false);
+                }
                 stop = false;
             }
             

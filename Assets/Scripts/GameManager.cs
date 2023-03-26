@@ -50,7 +50,12 @@ public class GameManager : MonoBehaviour
         {
             if (player.win != true)
             {
-                timer.enabled = true;
+                if(timer.enabled == false)
+                {
+                    timer.enabled = true;
+                }
+                
+                
                 if (Time.time > nextTime && player.win != true)
                 {
                     minutes -= 1;
@@ -65,8 +70,11 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-
-                timer.enabled = false;
+                if(timer.enabled == true)
+                {
+                    timer.enabled = false;
+                }
+                
 
             }
         }
