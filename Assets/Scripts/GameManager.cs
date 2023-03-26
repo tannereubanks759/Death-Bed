@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        minutes = 5;
+        minutes = 4;
         nextTime = 0;
         timer.text = minutes.ToString() + " minutes"; 
         playing = false;

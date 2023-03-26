@@ -79,6 +79,9 @@ public class CharacterControllerScript : MonoBehaviour
     public AudioSource select;
 
     public AudioSource music;
+
+    public bool cageBroken = false;
+    public bool glassIsBroken = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -200,8 +203,10 @@ public class CharacterControllerScript : MonoBehaviour
         {
             Vector3 spawnPos = lastObject.transform.position;
             gm.glassPlay();
+            
             Destroy(lastObject);
             Instantiate(glassBroken, spawnPos, Quaternion.identity);
+            StartCoroutine(glass());
         }
         
         
@@ -305,7 +310,7 @@ public class CharacterControllerScript : MonoBehaviour
         {
             stop = true;
             //Debug.Log(HitInfo.collider.gameObject.name);
-            if ((HitInfo.collider.gameObject.tag == "pickUp" || HitInfo.collider.gameObject.tag == "key" || HitInfo.collider.gameObject.tag == "axe") && holding == false)
+            if ((HitInfo.collider.gameObject.tag == "pickUp" || HitInfo.collider.gameObject.tag == "key" || (HitInfo.collider.gameObject.tag == "axe" && glassIsBroken == true)) && holding == false)
             {
 
                 pickUp = true;
@@ -339,7 +344,7 @@ public class CharacterControllerScript : MonoBehaviour
                 
                 lastObject = HitInfo.collider.gameObject;
             }
-            else if (HitInfo.collider.gameObject.tag == "pad" && holding == false)
+            else if (HitInfo.collider.gameObject.tag == "pad" && holding == false && cageBroken == true)
             {
                 crosshair.color = Color.green;
                 lookingAtPad = true;
@@ -350,6 +355,7 @@ public class CharacterControllerScript : MonoBehaviour
                 pickUp = false;
                 insert = false;
                 glassCanBreak = false;
+                lookingAtPad = false;
                 crosshair.color = Color.white;
                 wrongKey = false;
             }
@@ -375,6 +381,7 @@ public class CharacterControllerScript : MonoBehaviour
                 wrongKey = false;
                 insert = false;
                 glassCanBreak = false;
+                lookingAtPad = false;
                 crosshair.color = Color.white;
                 axeAnim.SetBool("tooClose", false);
                 door = null;
@@ -430,5 +437,11 @@ public class CharacterControllerScript : MonoBehaviour
     {
         yield return new WaitForSeconds(2);
         Destroy(Tutorial);
+
+    }
+    IEnumerator glass()
+    {
+        yield return new WaitForSeconds(.5f);
+        glassIsBroken = true;
     }
 }

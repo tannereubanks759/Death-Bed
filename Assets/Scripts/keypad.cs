@@ -8,6 +8,7 @@ public class keypad : MonoBehaviour
     public string input = "";
     public TMP_Text text;
     public CharacterControllerScript player;
+
     // Start is called before the first frame update
     void Start()
     {

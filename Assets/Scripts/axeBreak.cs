@@ -11,6 +11,8 @@ public class axeBreak : MonoBehaviour
     public bool swing;
 
     public GameManager gm;
+
+    public CharacterControllerScript player;
     // Start is called before the first frame update
     
     private void OnTriggerEnter(Collider collision)
@@ -23,11 +25,13 @@ public class axeBreak : MonoBehaviour
                 if(collision.gameObject.name == "Z_Keypad Cage")
                 {
                     gm.cagePlay();
+                    player.cageBroken = true;
                 }
                 else
                 {
                     axeAudio.Play();
                 }
+                
                 
                 boxPref = box.brokenBox;
                 Vector3 position1 = collision.gameObject.transform.position;
