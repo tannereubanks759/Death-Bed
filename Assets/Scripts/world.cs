@@ -9,16 +9,7 @@ public class world : MonoBehaviour
     public AudioClip open;
     public AudioClip move;
     // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
     public void openDoor()
     {
         gm.openDoorPlay();
