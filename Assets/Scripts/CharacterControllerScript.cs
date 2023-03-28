@@ -6,6 +6,8 @@ using UnityEngine.Animations;
 using UnityEngine.SceneManagement;
 public class CharacterControllerScript : MonoBehaviour
 {
+    
+
     //movement
     private float horizontal;
     private float vertical;
@@ -313,6 +315,7 @@ public class CharacterControllerScript : MonoBehaviour
             
             
         }
+        
         //Raycast
         RayOrigin = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         if (Physics.Raycast(RayOrigin, out HitInfo,2f, mask))

@@ -4,6 +4,8 @@ using UnityEngine;
 using TMPro;
 public class GameManager : MonoBehaviour
 {
+    public bool win;
+
     public TMP_Text timer;
     public float minutes = 5;
 
@@ -11,11 +13,12 @@ public class GameManager : MonoBehaviour
 
     public float nextTime;
 
-    public CharacterControllerScript player;
+    public CharacterControllerScriptOptimized player;
 
     public bool one = false;
 
-
+    public GameObject EndCam;
+    public Animator WorldAnim;
     //sounds
     public AudioSource source;
     public AudioClip wrongKeyClip;
@@ -48,7 +51,7 @@ public class GameManager : MonoBehaviour
         }
         if (playing == true)
         {
-            if (player.win != true)
+            if (win != true)
             {
                 if(timer.enabled == false)
                 {
@@ -56,7 +59,7 @@ public class GameManager : MonoBehaviour
                 }
                 
                 
-                if (Time.time > nextTime && player.win != true)
+                if (Time.time > nextTime && win != true)
                 {
                     minutes -= 1;
                     nextTime = Time.time + 60;
@@ -129,5 +132,14 @@ public class GameManager : MonoBehaviour
     public void elevatorDing()
     {
         source.PlayOneShot(eleding, 1f);
+    }
+    public void winAnim()
+    {
+        EndCam.SetActive(true);
+        player.cursorEnable();
+        Destroy(player.gameObject);
+        EndCam.GetComponent<Animator>().SetBool("winning", true);
+        WorldAnim.SetBool("winning", true);
+
     }
 }

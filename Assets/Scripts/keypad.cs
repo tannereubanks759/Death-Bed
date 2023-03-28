@@ -7,8 +7,8 @@ public class keypad : MonoBehaviour
     public string key = "3214";
     public string input = "";
     public TMP_Text text;
-    public CharacterControllerScript player;
-
+    
+    public GameManager gm;
     // Start is called before the first frame update
     void Start()
     {
@@ -41,7 +41,8 @@ public class keypad : MonoBehaviour
             text.faceColor = new Color(0, 1, 0);
             text.text = input;
             Debug.Log("correct");
-            player.win = true;
+            gm.win = true;
+                gm.winAnim();
         }
         else
         {
