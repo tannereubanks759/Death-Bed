@@ -42,7 +42,7 @@ public class keypad : MonoBehaviour
             text.text = input;
             Debug.Log("correct");
             gm.win = true;
-                gm.winAnim();
+            gm.winAnim();
         }
         else
         {
