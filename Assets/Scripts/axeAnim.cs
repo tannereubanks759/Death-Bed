@@ -20,4 +20,8 @@ public class axeAnim : MonoBehaviour
         swing = true;
         axeBreak1.swing = true;
     }
+    public void swingingFalse()
+    {
+        this.gameObject.GetComponent<Animator>().SetBool("Swinging", false);
+    }
 }
