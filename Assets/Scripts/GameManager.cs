@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public bool win;
 
+    public GameObject crosshair;
+
     public TMP_Text timer;
     public float minutes = 5;
 
@@ -135,6 +137,7 @@ public class GameManager : MonoBehaviour
     }
     public void winAnim()
     {
+        crosshair.SetActive(false);
         EndCam.SetActive(true);
         player.cursorEnable();
         Destroy(player.gameObject);
